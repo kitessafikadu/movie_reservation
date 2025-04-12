@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import UniqueConstraint
 from app.database import Base
 from datetime import datetime
 
@@ -43,11 +44,24 @@ class Showtime(Base):
 # === Reservation Model ===
 class Reservation(Base):
     __tablename__ = "reservations"
+    __table_args__ = (UniqueConstraint('showtime_id', 'seat_number', name='unique_seat_reservation'),)
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     showtime_id = Column(Integer, ForeignKey("showtimes.id"))
-    seat_number = Column(String, nullable=False)
+    seat_number = Column(Integer)
 
     user = relationship("User", back_populates="reservations")
     showtime = relationship("Showtime", back_populates="reservations")
+
+# class Showtime(Base):
+#     __tablename__ = "showtimes"
+
+#     id = Column(Integer, primary_key=True, index=True)
+#     movie_id = Column(Integer, ForeignKey("movies.id"))
+#     time = Column(DateTime)
+#     ticket_price = Column(Integer)  # New field for ticket price
+
+#     movie = relationship("Movie", back_populates="showtimes")
+#     reservations = relationship("Reservation", back_populates="showtime")
+

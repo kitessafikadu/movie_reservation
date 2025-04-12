@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 # === Movie Schemas ===
 class MovieBase(BaseModel):
@@ -44,3 +45,17 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+class Showtime(BaseModel):
+    id: int
+    movie_id: int
+    time: datetime
+    ticket_price: int  # Assuming ticket price is an integer field
+
+    class Config:
+        orm_mode = True 
+
+class ReservationReport(BaseModel):
+    showtime_id: int
+    movie_title: str
+    total_reservations: int
+    revenue: float
